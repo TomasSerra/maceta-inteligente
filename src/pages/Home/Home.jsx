@@ -69,6 +69,7 @@ export default function Home(props) {
                 <div className='light-fill' style={{width: `${(fbData.luz*100)/maxLight}%`}}></div>
             </div>
             <button className="regar" onTouchStart={regar} onTouchEnd={noRegar}>
+                <div className="top"></div>
                 <img className="regadera-icon" src={Regadera}/>
             </button>
         </div>

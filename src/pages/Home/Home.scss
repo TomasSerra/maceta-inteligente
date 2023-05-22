@@ -11,6 +11,12 @@ $light: #ffcf40;
     overflow: hidden;
     width: 100%;
     padding-top: 30px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     .automatic-container{
         width: 80%;
@@ -164,10 +170,6 @@ $light: #ffcf40;
         }
     }
 
-
-    
-
-
     .regar{
         width: 40vw;
         height:40vw;
@@ -178,6 +180,12 @@ $light: #ffcf40;
         background: $primary; 
         border: none;
         box-shadow: 0 10px #1e8197;
+
+        .top{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
 
         .regadera-icon{
             width: 60%;
