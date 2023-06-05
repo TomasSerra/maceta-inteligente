@@ -8,8 +8,6 @@ import Sun from '../../img/sun.png'
 export default function Home(props) {
 
     const [fbData, setFbData] = useState({});
-    const [maxLight, setMaxlight] = useState(3000);
-    const [maxHumidity, setMaxHumidity] = useState(3000);
     const [minHumidity, setMinHumidity] = useState(0);
     const [humidity, setHumidity] = useState(0);
 
@@ -18,11 +16,22 @@ export default function Home(props) {
             event.preventDefault();
         });
 
+        
+
         const starCountRef = ref(db, 'maceta/');
         onValue(starCountRef, (snapshot) => {
             const data = snapshot.val();
+            const m = -100/900
+            const b = 188.8888888
+            var humedadPorcentaje = Math.ceil(m*data.humedad+b);
+            if(humedadPorcentaje<0){
+                humedadPorcentaje = 0
+            }
+            else if(humedadPorcentaje>100){
+                humedadPorcentaje = 100
+            }
             setFbData(data)
-            setHumidity(parseInt((maxHumidity-data.humedad)*100/maxHumidity))
+            setHumidity(humedadPorcentaje)
             setMinHumidity(data.minHumedad)
         });
 
@@ -52,21 +61,22 @@ export default function Home(props) {
 
     return (
         <div className='Home'>
-            <div className={fbData.automatico ? "automatic-container automatico" :"automatic-container"} >
+            <div className={fbData.automatico ? "automatic-container automatico" :"automatic-container"}>
                 <h2>Automatico:</h2>
                 <button onClick={automatico}>{fbData.automatico ? "APAGAR" : "ENCENDER"}</button>
             </div>
             <div className='min-humidity-container'>
+                <h3 style={{margin:0, position:'absolute', top: '-10px', width:'100%', textAlign: 'center', marginLeft: '30px'}}>Humedad minima</h3>
                 <h3>{minHumidity}%</h3>
                 <input onChange={(event) => minHumiditySlider(event.target.value)} className={fbData.automatico ? "min-humidity-slider" : "min-humidity-slider-disabled"} type='range' disabled={!fbData.automatico} value={minHumidity}/>
             </div>
             <div className="humidity-container">
-                <div className='humidity-fill' style={{height: `${((maxHumidity-fbData.humedad)*100/maxHumidity)*230/100}px`}}></div>
+                <div className='humidity-fill' style={{height: `${humidity*230/100}px`}}></div>
                 <h2>{humidity}%</h2>
             </div>
             <div className='light-container'>
                 <img className="sun-icon" src={Sun}/>
-                <div className='light-fill' style={{width: `${(fbData.luz*100)/maxLight}%`}}></div>
+                <div className='light-fill' style={{width: `${fbData.luz}%`}}></div>
             </div>
             <button className="regar" onTouchStart={regar} onTouchEnd={noRegar}>
                 <div className="top"></div>
