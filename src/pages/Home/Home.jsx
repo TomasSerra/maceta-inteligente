@@ -66,7 +66,6 @@ export default function Home(props) {
                 <button onClick={automatico}>{fbData.automatico ? "APAGAR" : "ENCENDER"}</button>
             </div>
             <div className='min-humidity-container'>
-                <h3 style={{margin:0, position:'absolute', top: '-10px', width:'100%', textAlign: 'center', marginLeft: '30px'}}>Humedad minima</h3>
                 <h3>{minHumidity}%</h3>
                 <input onChange={(event) => minHumiditySlider(event.target.value)} className={fbData.automatico ? "min-humidity-slider" : "min-humidity-slider-disabled"} type='range' disabled={!fbData.automatico} value={minHumidity}/>
             </div>
