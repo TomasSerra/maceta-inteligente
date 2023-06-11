@@ -10,6 +10,7 @@ export default function Home(props) {
     const [fbData, setFbData] = useState({});
     const [minHumidity, setMinHumidity] = useState(0);
     const [humidity, setHumidity] = useState(0);
+    const [light, setLight] = useState(0);
 
     useEffect(()=>{
         document.addEventListener("contextmenu", (event) => { //Bloquea el click derecho
@@ -22,17 +23,28 @@ export default function Home(props) {
         onValue(starCountRef, (snapshot) => {
             const data = snapshot.val();
             const m = -100/900
-            const b = 188.8888888
+            const b = 188.88888888888
+            var luzPorcentaje = Math.ceil(data.luz*100/4095);
             var humedadPorcentaje = Math.ceil(m*data.humedad+b);
+
             if(humedadPorcentaje<0){
                 humedadPorcentaje = 0
             }
             else if(humedadPorcentaje>100){
                 humedadPorcentaje = 100
             }
+            if(luzPorcentaje<0){
+                luzPorcentaje = 0
+            }
+            else if(luzPorcentaje>100){
+                luzPorcentaje = 100
+            }
             setFbData(data)
+            setLight(luzPorcentaje)
             setHumidity(humedadPorcentaje)
-            setMinHumidity(data.minHumedad)
+            var minHumidityPercentage = Math.ceil(m*data.minHumedad+b)
+            if(minHumidityPercentage>100){minHumidityPercentage=100}
+            setMinHumidity(minHumidityPercentage)
         });
 
     },[])
@@ -54,8 +66,10 @@ export default function Home(props) {
     }
 
     function minHumiditySlider(range){
-        set(ref(db, 'maceta/minHumedad'), parseInt(range))
+        const m = -100/900
+        const b = 188.88888888888
         setMinHumidity(range)
+        set(ref(db, 'maceta/minHumedad'), parseInt((range-b)*(1/m)))
     }
 
 
@@ -75,7 +89,7 @@ export default function Home(props) {
             </div>
             <div className='light-container'>
                 <img className="sun-icon" src={Sun}/>
-                <div className='light-fill' style={{width: `${fbData.luz}%`}}></div>
+                <div className='light-fill' style={{width: `${light}%`}}></div>
             </div>
             <button className="regar" onTouchStart={regar} onTouchEnd={noRegar}>
                 <div className="top"></div>
